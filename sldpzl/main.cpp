@@ -280,16 +280,47 @@ class Pzl{
 		
 };
 
+void print_grid(){
+	// initialize variables for maximum character lengths of the terminal
+	int max_y, max_x;
+
+	initscr();
+	cbreak();
+   	noecho();
+    	curs_set(0); // Hide the blinking cursor
+		  
+	getmaxyx(stdscr, max_y, max_x); //getting the lengths in number of characters
+
+
+	// we need to define number of rows and characters for our drawing 
+	int n_rows = 6;
+	int n_columns = 12;
+
+	// we need a starting posision to draw
+	
+	int x_start = (max_x - n_columns)/2;
+	int y_start = (max_y - n_columns)/2;
+
+	// draw the horizontal lines
+	for (int i = 0; i <= n_rows; i += 2){
+		// ASC_HLINE is an unicode character we use to draw horizontal lines 
+		// para : y, x, char, lonng 
+		mvhline(y_start + i, x_start, ACS_HLINE, n_columns);
+	}
+	// draw the vertical lines
+	for (int j = 0; j <= n_columns; j += 4){
+		mvvline(y_start, x_start + j, ACS_VLINE, n_rows);
+	}
+
+	refresh();
+}
 
 int main(){
 
-	//exec();
-	//endwin();
-	Pzl k = Pzl();
-
-
-
-	k.exec();
+	//Pzl p = Pzl();
+	//p.exec();
+	print_grid();
+	getch(); // holding the output. for temporary pourposes
 	endwin();
 	return 0;
 }
