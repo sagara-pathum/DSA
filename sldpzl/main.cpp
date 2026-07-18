@@ -22,7 +22,20 @@ class Pzl{
 
 	public:
 		Pzl(){
+
 			initscr();
+			
+			// bug happens here. because terminal application usually runs in 'coocked' mode. which precisely 'line buffered mode'
+			// when we press a button its characters is saved in the buffer until it meet a newline character
+			// we need to remove the buffering and give the input character control to the application
+			// we can do that using cbreak();
+			// we when character is given, terminal tries to print the input to curser.
+			// it may also causes bugs.
+			// so it is better to use noecho() to stop that.
+			// usually noecho is used followed by cbreak.
+			cbreak();
+			noecho();
+
         		keypad(stdscr, TRUE);
 
 			this->shuffle_vec();
@@ -71,7 +84,7 @@ class Pzl{
         		while((ch=getch()) != 'q'){					
 				print_vec(this -> get_vec(), 5, 20);
 				refresh();	
-				move_tile(ch);	
+				move_tile(ch);
         		}	
 		}
 
@@ -266,6 +279,9 @@ int main(){
 	//exec();
 	//endwin();
 	Pzl k = Pzl();
+
+
+
 	k.exec();
 	endwin();
 	return 0;
