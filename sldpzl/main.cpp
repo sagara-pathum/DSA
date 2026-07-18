@@ -81,10 +81,17 @@ class Pzl{
 
 		void exec(){
 		        int ch;
+			// here is where the bug created. i was refreshing before moving. so that input is stays in buffer until refresh
+			print_vec(this -> get_vec(), 5, 20);
+			refresh();
         		while((ch=getch()) != 'q'){					
-				print_vec(this -> get_vec(), 5, 20);
-				refresh();	
+				// lets clean the things before writting.
+				move(20, 20);
+				clrtoeol();	
 				move_tile(ch);
+				print_vec(this -> get_vec(), 5, 20);
+                                refresh();
+
         		}	
 		}
 
