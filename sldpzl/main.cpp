@@ -280,7 +280,7 @@ class Pzl{
 		
 };
 
-void print_grid(){
+void print_grid(int size){
 	// initialize variables for maximum character lengths of the terminal
 	int max_y, max_x;
 
@@ -293,22 +293,23 @@ void print_grid(){
 
 
 	// we need to define number of rows and characters for our drawing 
-	int n_rows = 6;
-	int n_columns = 12;
-
+	int n_rows = size;
+	int n_columns = size*2;
+	int row_jumps = n_rows/3;
+	int col_jumps = n_columns/3;
 	// we need a starting posision to draw
 	
 	int x_start = (max_x - n_columns)/2;
-	int y_start = (max_y - n_columns)/2;
+	int y_start = (max_y - n_rows)/2;
 
 	// draw the horizontal lines
-	for (int i = 0; i <= n_rows; i += 2){
+	for (int i = 0; i <= n_rows; i += row_jumps){
 		// ASC_HLINE is an unicode character we use to draw horizontal lines 
 		// para : y, x, char, lonng 
 		mvhline(y_start + i, x_start, ACS_HLINE, n_columns);
 	}
 	// draw the vertical lines
-	for (int j = 0; j <= n_columns; j += 4){
+	for (int j = 0; j <= n_columns; j += col_jumps){
 		mvvline(y_start, x_start + j, ACS_VLINE, n_rows);
 	}
 	
@@ -320,12 +321,12 @@ void print_grid(){
 	mvaddch((y_start + n_rows), (x_start + n_columns), ACS_LRCORNER);
 
 	// now we can add ACS Tees for smooothing the middle lines on edges
-	for (int i = 4; i < n_columns; i += 4){
+	for (int i = col_jumps; i < n_columns; i += col_jumps){
 		mvaddch(y_start, (x_start + i), ACS_TTEE); // TOP TEE
 		mvaddch((y_start + n_rows), (x_start + i), ACS_BTEE); // BOTOM TEE
 	}
 
-	for (int j = 2; j < n_rows; j += 2){
+	for (int j = row_jumps; j < n_rows; j += row_jumps){
 		mvaddch((y_start + j), x_start, ACS_LTEE); //LEFT TEE
 		mvaddch((y_start + j), (x_start + n_columns), ACS_RTEE); //RIGHT TEE
 	}
@@ -337,7 +338,7 @@ int main(){
 
 	//Pzl p = Pzl();
 	//p.exec();
-	print_grid();
+	print_grid(18);
 	getch(); // holding the output. for temporary pourposes
 	endwin();
 	return 0;
