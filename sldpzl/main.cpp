@@ -311,6 +311,24 @@ void print_grid(){
 	for (int j = 0; j <= n_columns; j += 4){
 		mvvline(y_start, x_start + j, ACS_VLINE, n_rows);
 	}
+	
+	// we can smooth the corners by uing Alternative Character Set CORNERS
+	// para : y , x, char
+	mvaddch(y_start, x_start, ACS_ULCORNER);
+	mvaddch(y_start, (x_start + n_columns), ACS_URCORNER);
+	mvaddch((y_start + n_rows), x_start, ACS_LLCORNER);
+	mvaddch((y_start + n_rows), (x_start + n_columns), ACS_LRCORNER);
+
+	// now we can add ACS Tees for smooothing the middle lines on edges
+	for (int i = 4; i < n_columns; i += 4){
+		mvaddch(y_start, (x_start + i), ACS_TTEE); // TOP TEE
+		mvaddch((y_start + n_rows), (x_start + i), ACS_BTEE); // BOTOM TEE
+	}
+
+	for (int j = 2; j < n_rows; j += 2){
+		mvaddch((y_start + j), x_start, ACS_LTEE); //LEFT TEE
+		mvaddch((y_start + j), (x_start + n_columns), ACS_RTEE); //RIGHT TEE
+	}
 
 	refresh();
 }
