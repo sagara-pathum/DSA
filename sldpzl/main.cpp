@@ -18,6 +18,8 @@ class Pzl{
 			{7,8,0}
 		};
 
+		int temp_for_swap;
+
 	public:
 		Pzl(){
 			initscr();
@@ -27,9 +29,9 @@ class Pzl{
 
 
         		v = {
-                		{ tile_num[0], tile_num[2], tile_num[3] },
-                		{ tile_num[4], tile_num[5], tile_num[6] },
-                		{ tile_num[7], tile_num[8], tile_num[0] }
+                		{ tile_num[0], tile_num[1], tile_num[2] },
+                		{ tile_num[3], tile_num[4], tile_num[5] },
+                		{ tile_num[6], tile_num[7], tile_num[8] }
         		};
 		}
 
@@ -44,9 +46,9 @@ class Pzl{
                         std::shuffle(tile_num.begin(), tile_num.end(), mt);
 
 			v = {
-                                { tile_num[0], tile_num[2], tile_num[3] },
-                                { tile_num[4], tile_num[5], tile_num[6] },
-                                { tile_num[7], tile_num[8], tile_num[0] }
+                                { tile_num[0], tile_num[1], tile_num[2] },
+                                { tile_num[3], tile_num[4], tile_num[5] },
+                                { tile_num[6], tile_num[7], tile_num[8] }
                         };
 		}
 
@@ -61,29 +63,200 @@ class Pzl{
                 		}
                 		printw("\n");
         		}
-			refresh();
 		}
 
 
 		void exec(){
 		        int ch;
-        		while((ch=getch()) != 'q'){
-                		switch(ch) {
-
-                        		case KEY_UP:
-                                		printw("Up ebuwa utto");
-                                		break;
-                        		case KEY_DOWN:
-						shuffle_vec();                               		
-						print_vec(this -> get_vec(), 5, 20);
-                                		break;
-                        		case KEY_LEFT:
-                                		break;
-                        		case KEY_RIGHT:
-                                		break;
-                		}
+        		while((ch=getch()) != 'q'){					
+				print_vec(this -> get_vec(), 5, 20);
+				refresh();	
+				move_tile(ch);	
         		}	
 		}
+
+		void zero(int* row, int* column){
+			for(int i = 0; i < 3; i++){
+				for(int j = 0; j < 3; j++){
+					if ( this->v[i][j] == 0){
+						*row = i;
+						*column = j;
+					}
+				}
+			}
+		}
+
+		void move_tile(int key){
+        		int r;
+        		int c;
+        		zero(&r, &c);
+
+        		switch (key) {
+                		case KEY_UP:
+                        		if (r == 2){
+                                		move(20,20);
+                                		printw("Can't move. There is no tile");
+                        		} else {
+						if (r == 1){
+							switch (c){
+								case 0:
+									swap_vec_position(1,0,2,0);
+									zero(&r, &c);
+									break;
+								case 1:
+									swap_vec_position(1,1,2,1);
+									zero(&r, &c);
+									break;
+								case 2:
+									swap_vec_position(1,2,2,2);
+									zero(&r, &c);
+									break;
+							}
+							
+						} else {
+							switch (c){
+								case 0:
+									swap_vec_position(0,0,1,0);
+									zero(&r, &c);
+									break;
+								case 1:
+									swap_vec_position(0,1,1,1);
+									zero(&r, &c);
+									break;
+								case 2:
+									swap_vec_position(0,2,1,2);
+									zero(&r, &c);
+									break;
+							}
+						}
+                        		}
+                        		break;
+
+                		case KEY_DOWN:
+					if (r == 0){
+						move(20,20);
+						printw("Can't move. There is no tile");
+					} else {
+						if (r == 1) {
+							switch (c){
+								case 0:
+									swap_vec_position(1,0,0,0);
+									zero(&r, &c);
+									break;
+								case 1:
+									swap_vec_position(1,1,0,1);
+									zero(&r, &c);
+									break;
+								case 2:
+									swap_vec_position(1,2,0,2);
+									zero(&r, &c);
+									break;
+							}
+						} else {
+							switch (c){
+								case 0:
+									swap_vec_position(2,0,1,0);
+									zero(&r, &c);
+									break;
+								case 1:
+									swap_vec_position(2,1,1,1);
+									zero(&r, &c);
+									break;
+								case 2:
+									swap_vec_position(2,2,1,2);
+									zero(&r, &c);
+									break;
+							}
+						}
+					}
+
+                        		break;
+
+                		case KEY_LEFT:
+					if (c == 2){
+						move(20,20);
+						printw("Can't move. There is no tile");
+					} else {
+						if (c == 1) {
+							switch (r){
+								case 0:
+									swap_vec_position(0,1,0,2);
+									zero(&r, &c);
+									break;
+								case 1:
+									swap_vec_position(1,1,1,2);
+									zero(&r, &c);
+									break;
+								case 2:
+									swap_vec_position(2,1,2,2);
+									zero(&r, &c);
+									break;
+							}
+						} else {
+							switch (r){
+								case 0:
+									swap_vec_position(0,0,0,1);
+									zero(&r, &c);
+									break;
+								case 1:
+									swap_vec_position(1,0,1,1);
+									zero(&r, &c);
+									break;
+								case 2:
+									swap_vec_position(2,0,2,1);
+									zero(&r, &c);
+									break;
+							}
+						}
+					}
+                        		break;
+                		case KEY_RIGHT:
+					if (c == 0) {
+						move(20,20);
+						printw("Can't move. There is no tile");
+					} else {
+						if (c == 1){
+							switch (r){
+								case 0:
+									swap_vec_position(0,1,0,0);
+									zero(&r, &c);
+									break;
+								case 1:
+									swap_vec_position(1,1,1,0);
+									zero(&r, &c);
+									break;
+								case 2:
+									swap_vec_position(2,1,2,0);
+									zero(&r, &c);
+									break;
+							}
+						} else {
+							switch (r){
+								case 0:
+									swap_vec_position(0,2,0,1);
+									zero(&r, &c);
+									break;
+								case 1:
+									swap_vec_position(1,2,1,1);
+									zero(&r, &c);
+									break;
+								case 2:
+									swap_vec_position(2,2,2,1);
+									zero(&r, &c);
+									break;
+							}
+						}
+					}
+                        		break;
+        		}
+		}
+
+		void swap_vec_position(int r1, int c1, int r2, int c2){
+			this-> temp_for_swap = this-> v[r1][c1];
+			this-> v[r1][c1] = this-> v[r2][c2];
+			this-> v[r2][c2] = temp_for_swap;
+		}
+
 		
 };
 
