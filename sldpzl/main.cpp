@@ -9,7 +9,7 @@
 //https://dev.to/tbhaxor/introduction-to-ncurses-part-1-1bk5
 
 class Pzl{
-	private:
+	protected:
 		std::vector<int> tile_num = {0,1,2,3,4,5,6,7,8};
 		
 		std::vector< std::vector<int> > v = {
@@ -36,7 +36,7 @@ class Pzl{
 			cbreak();
 			noecho();
 
-        		keypad(stdscr, TRUE);
+        	keypad(stdscr, TRUE);
 
 			this->shuffle_vec();
 
@@ -55,43 +55,41 @@ class Pzl{
 
 		void shuffle_vec(){
 			std::random_device r = std::random_device();
-                        std::mt19937 mt(r());
-                        std::shuffle(tile_num.begin(), tile_num.end(), mt);
+            std::mt19937 mt(r());
+            std::shuffle(tile_num.begin(), tile_num.end(), mt);
 
 			v = {
-                                { tile_num[0], tile_num[1], tile_num[2] },
-                                { tile_num[3], tile_num[4], tile_num[5] },
-                                { tile_num[6], tile_num[7], tile_num[8] }
-                        };
+                    { tile_num[0], tile_num[1], tile_num[2] },
+                    { tile_num[3], tile_num[4], tile_num[5] },
+                    { tile_num[6], tile_num[7], tile_num[8] }
+            };
 		}
 
 		void print_vec(std::vector<std::vector<int> > vec,int con_row,int line_start){
-        		for (int i = 0; i < 3; i++){
-                		
+        	for (int i = 0; i < 3; i++){		
 				move((con_row+i),(line_start));
-                                clrtoeol();
+            	clrtoeol();
 
 				for (int j = 0; j < 3; j++){
-                        		printw("%d ", vec[i][j]);
-                		}
-                		printw("\n");
-        		}
+                	printw("%d ", vec[i][j]);
+            	}
+            	printw("\n");
+        	}
 		}
 
 
 		void exec(){
-		        int ch;
+		    int ch;
 			// here is where the bug created. i was refreshing before moving. so that input is stays in buffer until refresh
 			print_vec(this -> get_vec(), 5, 20);
 			refresh();
-        		while((ch=getch()) != 'q'){					
+        	while((ch=getch()) != 'q'){					
 				// lets clean the things before writting.
 				move(20, 20);
 				clrtoeol();	
 				move_tile(ch);
 				print_vec(this -> get_vec(), 5, 20);
-                                refresh();
-
+                refresh();
         		}	
 		}
 
@@ -107,16 +105,16 @@ class Pzl{
 		}
 
 		void move_tile(int key){
-        		int r;
-        		int c;
-        		zero(&r, &c);
+        	int r;
+        	int c;
+        	zero(&r, &c);
 
-        		switch (key) {
-                		case KEY_UP:
-                        		if (r == 2){
-                                		move(20,20);
-                                		printw("Can't move. There is no tile");
-                        		} else {
+        	switch (key) {
+            	case KEY_UP:
+                    if (r == 2){
+                        move(20,20);
+                        printw("Can't move. There is no tile");
+                    } else {
 						if (r == 1){
 							switch (c){
 								case 0:
@@ -149,10 +147,10 @@ class Pzl{
 									break;
 							}
 						}
-                        		}
-                        		break;
+                    }
+                    break;
 
-                		case KEY_DOWN:
+                case KEY_DOWN:
 					if (r == 0){
 						move(20,20);
 						printw("Can't move. There is no tile");
@@ -189,10 +187,9 @@ class Pzl{
 							}
 						}
 					}
+                    break;
 
-                        		break;
-
-                		case KEY_LEFT:
+                case KEY_LEFT:
 					if (c == 2){
 						move(20,20);
 						printw("Can't move. There is no tile");
@@ -229,8 +226,9 @@ class Pzl{
 							}
 						}
 					}
-                        		break;
-                		case KEY_RIGHT:
+                    break;
+                		
+				case KEY_RIGHT:
 					if (c == 0) {
 						move(20,20);
 						printw("Can't move. There is no tile");
@@ -267,8 +265,8 @@ class Pzl{
 							}
 						}
 					}
-                        		break;
-        		}
+                    break;
+        	}
 		}
 
 		void swap_vec_position(int r1, int c1, int r2, int c2){
@@ -280,65 +278,101 @@ class Pzl{
 		
 };
 
-void print_grid(int size){
-	// initialize variables for maximum character lengths of the terminal
-	int max_y, max_x;
 
-	initscr();
-	cbreak();
-   	noecho();
-    	curs_set(0); // Hide the blinking cursor
-		  
-	getmaxyx(stdscr, max_y, max_x); //getting the lengths in number of characters
+class Grid : public Pzl{
+	public :
+		void mvprintw(int x, int y, int n){
+        	move(x, y);
+        	printw("%d ",n);
+		}
+
+		void add_vec(int x_start, int y_start, int row_jumps, int col_jumps){
+		    int x1 = x_start + (col_jumps/2);
+		    int x2 = x_start + 3*(col_jumps/2);
+        	int x3 = x_start + 5*(col_jumps/2);
+
+        	int y1 = y_start + (row_jumps/2);
+        	int y2 = y_start + 3*(row_jumps/2);
+        	int y3 = y_start + 5*(row_jumps/2);
+
+        		mvprintw(x1, y1, this-> v[0][0]);
+        		mvprintw(x1, y2, this-> v[0][1]);
+        		mvprintw(x1, y3, this-> v[0][2]);
+
+        		mvprintw(x2, y1, this-> v[1][0]);
+        		mvprintw(x2, y2, this-> v[1][1]);
+        		mvprintw(x2, y3, this-> v[1][2]);
+
+        		mvprintw(x3, y1, this-> v[2][0]);
+        		mvprintw(x3, y2, this-> v[2][1]);
+        		mvprintw(x3, y3, this-> v[2][2]);
+
+		}
+		
+		void print_grid(int size){
+			// initialize variables for maximum character lengths of the terminal
+	        int max_y, max_x;
+			
+			//these things are already initialized in superclass
+	        //initscr();
+	        //cbreak();
+            //noecho();
+
+            curs_set(0); // Hide the blinking cursor
+		                    
+	        getmaxyx(stdscr, max_y, max_x); //getting the lengths in number of characters
 
 
-	// we need to define number of rows and characters for our drawing 
-	int n_rows = size;
-	int n_columns = size*2;
-	int row_jumps = n_rows/3;
-	int col_jumps = n_columns/3;
-	// we need a starting posision to draw
-	
-	int x_start = (max_x - n_columns)/2;
-	int y_start = (max_y - n_rows)/2;
+	        // we need to define number of rows and characters for our drawing 
+	        int n_rows = size;
+	        int n_columns = size*2;
+	        int row_jumps = n_rows/3;
+	        int col_jumps = n_columns/3;
+	        // we need a starting posision to draw
+	                  
+	        int x_start = (max_x - n_columns)/2;
+	        int y_start = (max_y - n_rows)/2;
 
-	// draw the horizontal lines
-	for (int i = 0; i <= n_rows; i += row_jumps){
-		// ASC_HLINE is an unicode character we use to draw horizontal lines 
-		// para : y, x, char, lonng 
-		mvhline(y_start + i, x_start, ACS_HLINE, n_columns);
-	}
-	// draw the vertical lines
-	for (int j = 0; j <= n_columns; j += col_jumps){
-		mvvline(y_start, x_start + j, ACS_VLINE, n_rows);
-	}
-	
-	// we can smooth the corners by uing Alternative Character Set CORNERS
-	// para : y , x, char
-	mvaddch(y_start, x_start, ACS_ULCORNER);
-	mvaddch(y_start, (x_start + n_columns), ACS_URCORNER);
-	mvaddch((y_start + n_rows), x_start, ACS_LLCORNER);
-	mvaddch((y_start + n_rows), (x_start + n_columns), ACS_LRCORNER);
+	        // draw the horizontal lines
+	        for (int i = 0; i <= n_rows; i += row_jumps){
+		    	// ASC_HLINE is an unicode character we use to draw horizontal lines 
+		        // para : y, x, char, lonng 
+		        mvhline(y_start + i, x_start, ACS_HLINE, n_columns);
+	        }
+	        // draw the vertical lines
+	        for (int j = 0; j <= n_columns; j += col_jumps){
+		        mvvline(y_start, x_start + j, ACS_VLINE, n_rows);
+	        }
+	                  
+	        // we can smooth the corners by uing Alternative Character Set CORNERS
+	        // para : y , x, char
+	        mvaddch(y_start, x_start, ACS_ULCORNER);
+	        mvaddch(y_start, (x_start + n_columns), ACS_URCORNER);
+	        mvaddch((y_start + n_rows), x_start, ACS_LLCORNER);
+	        mvaddch((y_start + n_rows), (x_start + n_columns), ACS_LRCORNER);
 
-	// now we can add ACS Tees for smooothing the middle lines on edges
-	for (int i = col_jumps; i < n_columns; i += col_jumps){
-		mvaddch(y_start, (x_start + i), ACS_TTEE); // TOP TEE
-		mvaddch((y_start + n_rows), (x_start + i), ACS_BTEE); // BOTOM TEE
-	}
+	        // now we can add ACS Tees for smooothing the middle lines on edges
+	        for (int i = col_jumps; i < n_columns; i += col_jumps){
+		        mvaddch(y_start, (x_start + i), ACS_TTEE); // TOP TEE
+		        mvaddch((y_start + n_rows), (x_start + i), ACS_BTEE); // BOTOM TEE
+	        }
 
-	for (int j = row_jumps; j < n_rows; j += row_jumps){
-		mvaddch((y_start + j), x_start, ACS_LTEE); //LEFT TEE
-		mvaddch((y_start + j), (x_start + n_columns), ACS_RTEE); //RIGHT TEE
-	}
+	        for (int j = row_jumps; j < n_rows; j += row_jumps){
+		        mvaddch((y_start + j), x_start, ACS_LTEE); //LEFT TEE
+		        mvaddch((y_start + j), (x_start + n_columns), ACS_RTEE); //RIGHT TEE
+	        }
 
-	refresh();
-}
+	        refresh();
+		}
+
+};
+
 
 int main(){
 
 	//Pzl p = Pzl();
 	//p.exec();
-	print_grid(18);
+	//print_grid(18);
 	getch(); // holding the output. for temporary pourposes
 	endwin();
 	return 0;
