@@ -21,10 +21,15 @@ class Pzl
 
 		int temp_for_swap;
 
+		int max_y, max_x; //for screen dimensions
+
 	public:
 		Pzl(){
 
 			initscr();
+
+			getmaxyx(stdscr, max_y, max_x);
+
 			
 			// bug happens here. because terminal application usually runs in 'coocked' mode. which precisely 'line buffered mode'
 			// when we press a button its characters is saved in the buffer until it meet a newline character
@@ -104,10 +109,21 @@ class Pzl
 			}
 		}
 
+		void move_err(){
+			std::string s = "Can't move. There is no tile";
+			int foot_y = max_y;
+			int foot_x = (max_y - (s.length())/2);
+
+			move(foot_y, foot_x);
+			printw("%s", s);
+		}
+
 		void move_tile(int key){
         	int r;
         	int c;
         	zero(&r, &c);
+
+			getmaxyx(stdscr, max_y, max_x);
 
         	switch (key) {
             	case KEY_UP:
@@ -291,12 +307,12 @@ class Grid : public Pzl
 	    int x_start;
 	    int y_start;
 
-		int max_y, max_x; //for screen dimensions
+		// int max_y, max_x; //for screen dimensions
 
 	public :
 		// constructor
 		Grid (int grid_size){
-			getmaxyx(stdscr, max_y, max_x);
+			// getmaxyx(stdscr, max_y, max_x);
 			
 			n_rows = grid_size;
 			n_columns = grid_size*2;
@@ -306,7 +322,7 @@ class Grid : public Pzl
 			x_start = (max_x - n_columns)/2;
 			y_start = (max_y - n_rows)/2;
 			
-			print_grid();
+			//print_grid();
 		}
 
 		void mvprintw(int x, int y, int n){
@@ -328,15 +344,15 @@ class Grid : public Pzl
         	int y3 = y_start + 5*(row_jumps/2);
 
         	mvprintw(x1, y1, (*v_ptr)[0][0]);
-        	mvprintw(x1, y2, (*v_ptr)[0][1]);
-        	mvprintw(x1, y3, (*v_ptr)[0][2]);
+        	mvprintw(x2, y1, (*v_ptr)[0][1]);
+        	mvprintw(x3, y1, (*v_ptr)[0][2]);
 
-        	mvprintw(x2, y1, (*v_ptr)[1][0]);
+        	mvprintw(x1, y2, (*v_ptr)[1][0]);
         	mvprintw(x2, y2, (*v_ptr)[1][1]);
-        	mvprintw(x2, y3, (*v_ptr)[1][2]);
+        	mvprintw(x3, y2, (*v_ptr)[1][2]);
 
-        	mvprintw(x3, y1, (*v_ptr)[2][0]);
-        	mvprintw(x3, y2, (*v_ptr)[2][1]);
+        	mvprintw(x1, y3, (*v_ptr)[2][0]);
+        	mvprintw(x2, y3, (*v_ptr)[2][1]);
         	mvprintw(x3, y3, (*v_ptr)[2][2]);
 
 		}
@@ -396,6 +412,21 @@ class Grid : public Pzl
 	        }
 		}
 
+		void gexec(){
+		    int ch;
+			print_grid();
+			add_vec();
+			refresh();
+        	while((ch=getch()) != 'q'){					
+				// lets clean the things before writting.
+				// move(20, 20);
+				// clrtoeol();	
+				move_tile(ch);
+				add_vec();
+                refresh();
+        		}	
+		}
+
 };
 
 
@@ -405,8 +436,8 @@ int main(){
 	//p.exec();
 	//print_grid(18);
 	Grid g = Grid(12);
-	g.add_vec();
-	refresh();
+	g.gexec();
+	// refresh();
 	//g.add_vec();
 
 	getch(); // holding the output. for temporary pourposes
