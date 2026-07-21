@@ -27,6 +27,10 @@ class Grid : public Pzl
 
 		void gexec(); // this is the evenloop that holds and updates the TUI grid interface.
 
+		bool is_win(); // to check whether the goal is reached or not
+
+		void screen_border();
+
 };
 
 #endif

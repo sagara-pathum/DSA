@@ -81,12 +81,50 @@ void Grid::print_grid(){
 
 void Grid::gexec(){
     int ch;
+	screen_border();
 	print_grid();
 	add_vec();
 	refresh();
-	while((ch=getch()) != 'q'){					
+	while((ch=getch()) != 'q'){	
+		screen_border();				
 		move_tile(ch);
 		add_vec();
         refresh();
 	}	
+}
+
+bool Grid::is_win(){
+
+	std::vector< std::vector<int> > win = {
+		{1,2,3},
+		{4,5,6},
+		{7,8,0}
+	};
+	
+	if ((*v_ptr) == win) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+void Grid::screen_border(){
+	int x_left = 1;
+	int y_top = 1;
+	int x_right = max_x - 1;
+	int y_bottom = max_y - 2;
+
+	int x_long = max_x - 2;
+	int y_long = max_y - 3; 
+
+	mvhline(y_top, x_left, ACS_HLINE, x_long);
+	mvhline(y_bottom, x_left, ACS_HLINE, x_long);
+	mvvline(y_top, x_left, ACS_VLINE, y_long);
+	mvvline(y_top, x_right, ACS_VLINE, y_long);
+
+	mvaddch(y_top, x_left, ACS_ULCORNER);
+    mvaddch(y_top, x_right, ACS_URCORNER);
+    mvaddch(y_bottom, x_left, ACS_LLCORNER);
+    mvaddch(y_bottom, x_right, ACS_LRCORNER);
+
 }
