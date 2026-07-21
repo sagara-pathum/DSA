@@ -88,6 +88,7 @@ class Pzl
 			// here is where the bug created. i was refreshing before moving. so that input is stays in buffer until refresh
 			print_vec(this -> get_vec(), 5, 20);
 			refresh();
+
         	while((ch=getch()) != 'q'){					
 				// lets clean the things before writting.
 				move(20, 20);
@@ -96,7 +97,7 @@ class Pzl
 				print_vec(this -> get_vec(), 5, 20);
                 refresh();
         		}	
-		}
+		} 
 
 		void zero(int* row, int* column){
 			for(int i = 0; i < 3; i++){
@@ -110,12 +111,23 @@ class Pzl
 		}
 
 		void move_err(){
-			std::string s = "Can't move. There is no tile";
-			int foot_y = max_y;
-			int foot_x = (max_y - (s.length())/2);
+			char s[] = "Can't move. There is no tile";
+			int length_s = (sizeof(s)/sizeof(char)) - 1; 
+			int foot_y = max_y - 1;
+			int foot_x = (max_x - length_s)/2;
 
 			move(foot_y, foot_x);
 			printw("%s", s);
+		}
+
+		void clr_move_err(){
+			char s[] = "Can't move. There is no tile";
+			int length_s = (sizeof(s)/sizeof(char)) - 1; 
+			int foot_y = max_y - 1;
+			int foot_x = (max_x - length_s)/2;
+
+			move(foot_y, foot_x);
+			clrtoeol();	
 		}
 
 		void move_tile(int key){
@@ -128,9 +140,10 @@ class Pzl
         	switch (key) {
             	case KEY_UP:
                     if (r == 2){
-                        move(20,20);
-                        printw("Can't move. There is no tile");
+
+						move_err();
                     } else {
+						clr_move_err();
 						if (r == 1){
 							switch (c){
 								case 0:
@@ -168,9 +181,10 @@ class Pzl
 
                 case KEY_DOWN:
 					if (r == 0){
-						move(20,20);
-						printw("Can't move. There is no tile");
+
+						move_err();
 					} else {
+						clr_move_err();
 						if (r == 1) {
 							switch (c){
 								case 0:
@@ -207,9 +221,10 @@ class Pzl
 
                 case KEY_LEFT:
 					if (c == 2){
-						move(20,20);
-						printw("Can't move. There is no tile");
+
+						move_err();
 					} else {
+						clr_move_err();
 						if (c == 1) {
 							switch (r){
 								case 0:
@@ -246,9 +261,10 @@ class Pzl
                 		
 				case KEY_RIGHT:
 					if (c == 0) {
-						move(20,20);
-						printw("Can't move. There is no tile");
+
+						move_err();
 					} else {
+						clr_move_err();
 						if (c == 1){
 							switch (r){
 								case 0:
@@ -307,12 +323,9 @@ class Grid : public Pzl
 	    int x_start;
 	    int y_start;
 
-		// int max_y, max_x; //for screen dimensions
-
 	public :
-		// constructor
+
 		Grid (int grid_size){
-			// getmaxyx(stdscr, max_y, max_x);
 			
 			n_rows = grid_size;
 			n_columns = grid_size*2;
@@ -322,7 +335,6 @@ class Grid : public Pzl
 			x_start = (max_x - n_columns)/2;
 			y_start = (max_y - n_rows)/2;
 			
-			//print_grid();
 		}
 
 		void mvprintw(int x, int y, int n){
@@ -358,29 +370,9 @@ class Grid : public Pzl
 		}
 		
 		void print_grid(){
-			// initialize variables for maximum character lengths of the terminal
-	        //int max_y, max_x;
-			
-			//these things are already initialized in superclass
-	        //initscr();
-	        //cbreak();
-            //noecho();
+
 
             curs_set(0); // Hide the blinking cursor
-		                    
-	        //getmaxyx(stdscr, max_y, max_x); //getting the lengths in number of characters
-
-			/*
-	        // we need to define number of rows and characters for our drawing 
-	        int n_rows = size;
-	        int n_columns = size*2;
-	        int row_jumps = n_rows/3;
-	        int col_jumps = n_columns/3;
-	        // we need a starting posision to draw
-	                  
-	        int x_start = (max_x - n_columns)/2;
-	        int y_start = (max_y - n_rows)/2;
-			*/
 			
 	        // draw the horizontal lines
 	        for (int i = 0; i <= n_rows; i += row_jumps){
@@ -418,9 +410,6 @@ class Grid : public Pzl
 			add_vec();
 			refresh();
         	while((ch=getch()) != 'q'){					
-				// lets clean the things before writting.
-				// move(20, 20);
-				// clrtoeol();	
 				move_tile(ch);
 				add_vec();
                 refresh();
@@ -433,13 +422,8 @@ class Grid : public Pzl
 int main(){
 
 	Pzl p = Pzl();
-	//p.exec();
-	//print_grid(18);
 	Grid g = Grid(12);
 	g.gexec();
-	// refresh();
-	//g.add_vec();
-
 	getch(); // holding the output. for temporary pourposes
 	endwin();
 	return 0;
