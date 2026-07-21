@@ -22,13 +22,13 @@ Pzl::Pzl(){
 
 	keypad(stdscr, TRUE);
 
-	this->shuffle_vec();
-
 	v = {
                 { tile_num[0], tile_num[1], tile_num[2] },
                 { tile_num[3], tile_num[4], tile_num[5] },
                 { tile_num[6], tile_num[7], tile_num[8] }
 	};
+
+	puzzle_suffle(50);
 }
 
 std::vector< std::vector<int> > Pzl::get_vec(){
@@ -301,4 +301,36 @@ void Pzl::swap_vec_position(int r1, int c1, int r2, int c2){
 	this-> v[r1][c1] = this-> v[r2][c2];
 	this-> v[r2][c2] = temp_for_swap;
 	
+}
+
+void Pzl::puzzle_suffle(int n_size){
+	// lets initialize the puzzle in correct order first. then we can make some random moves. (initialization is already sorted)
+	int arr[n_size];
+	
+	std::random_device r = std::random_device();
+    std::mt19937 mt(r());
+    std::uniform_int_distribution vec_moves(1,4);
+
+
+	for (int i = 0; i < n_size; i++){
+		arr[i] = vec_moves(mt);
+	}
+
+	for (int j = 0; j < n_size; j++){
+		switch (arr[j]){
+			case 1 :
+				move_tile(KEY_UP);
+				break;
+			case 2 :
+				move_tile(KEY_DOWN);
+				break;
+			case 3 :
+				move_tile(KEY_LEFT);
+				break;
+			case 4 :
+				move_tile(KEY_RIGHT);
+				break;
+		}
+	}
+	clr_move_err();
 }

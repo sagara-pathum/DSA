@@ -40,6 +40,8 @@ class Pzl
 
 		void move_tile(int key); // this is the function that moves the numbers
 
+		void puzzle_suffle(int n_size); // shuffle_vec is random. it is not good for sldpzl. sometimes it makes the puzzle unsolvable. i write a function again
+
 };
 
 #endif
