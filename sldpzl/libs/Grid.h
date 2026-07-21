@@ -31,6 +31,8 @@ class Grid : public Pzl
 
 		void screen_border();
 
+		void print_over();
+
 };
 
 #endif

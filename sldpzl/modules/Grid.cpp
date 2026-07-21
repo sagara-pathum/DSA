@@ -86,10 +86,21 @@ void Grid::gexec(){
 	add_vec();
 	refresh();
 	while((ch=getch()) != 'q'){	
+		
 		screen_border();				
 		move_tile(ch);
 		add_vec();
         refresh();
+
+		if (is_win()) {
+
+			print_over();
+			screen_border();
+			add_vec();
+			refresh();
+			end_hold(); /// see here there is a bug
+		}
+			
 	}	
 }
 
@@ -106,6 +117,16 @@ bool Grid::is_win(){
 	} else {
 		return false;
 	}
+}
+
+
+void Grid::print_over(){
+	move(3,3);
+	/*std::string*/char s[] = " _______  _______  __   __  _______    _______  __   __  _______  ______    \n   |       ||   _   ||  |_|  ||       |  |       ||  | |  ||       ||    _ |  \n   |    ___||  |_|  ||       ||    ___|  |   _   ||  |_|  ||    ___||   | ||  \n   |   | __ |       ||       ||   |___   |  | |  ||       ||   |___ |   |_||_ \n   |   ||  ||       ||       ||    ___|  |  |_|  ||       ||    ___||    __  |\n   |   |_| ||   _   || ||_|| ||   |___   |       | |     | |   |___ |   |  | |\n   |_______||__| |__||_|   |_||_______|  |_______|  |___|  |_______||___|  |_|\n";
+
+	printw("%s", s);
+	refresh();
+
 }
 
 void Grid::screen_border(){
@@ -127,4 +148,11 @@ void Grid::screen_border(){
     mvaddch(y_bottom, x_left, ACS_LLCORNER);
     mvaddch(y_bottom, x_right, ACS_LRCORNER);
 
+}
+
+
+void end_hold(){
+	while(true)	{
+		refresh();
+	}
 }
