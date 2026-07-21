@@ -41,12 +41,11 @@ class Pzl
 
 			this->shuffle_vec();
 
-
-        		v = {
-                		{ tile_num[0], tile_num[1], tile_num[2] },
-                		{ tile_num[3], tile_num[4], tile_num[5] },
-                		{ tile_num[6], tile_num[7], tile_num[8] }
-        		};
+        	v = {
+                	{ tile_num[0], tile_num[1], tile_num[2] },
+                	{ tile_num[3], tile_num[4], tile_num[5] },
+                	{ tile_num[6], tile_num[7], tile_num[8] }
+        	};
 		}
 
 		std::vector< std::vector<int> > get_vec(){
@@ -311,8 +310,12 @@ class Grid : public Pzl
 		}
 
 		void mvprintw(int x, int y, int n){
-        	move(x, y);
-        	printw("%d ",n);
+        	move(y, x);
+			if (n != 0) {
+        		printw("%d ",n);
+			} else {
+				printw(" ");
+			}
 		}
 
 		void add_vec(){
@@ -402,7 +405,8 @@ int main(){
 	//p.exec();
 	//print_grid(18);
 	Grid g = Grid(12);
-	//refresh();
+	g.add_vec();
+	refresh();
 	//g.add_vec();
 
 	getch(); // holding the output. for temporary pourposes
