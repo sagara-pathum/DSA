@@ -5,6 +5,8 @@
 int main(){
 
 	Pzl p = Pzl();
+	p.loading();
+	clear();
 	Grid g = Grid(12);
 	g.gexec();
 	endwin();

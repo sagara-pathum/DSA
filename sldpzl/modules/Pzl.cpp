@@ -333,3 +333,24 @@ void Pzl::puzzle_suffle(int n_size){
 	}
 	clr_move_err();
 }
+
+
+void Pzl::loading(){
+	long j = 0;
+	int key_position = 10;
+
+	move(2,2);
+	printw("Loading ");
+	refresh();
+
+	for (long i = 0; i <= 2400000000 ; i++) {
+		if (j == 400000000) {
+			move(2,key_position);
+			printw("#");
+			refresh();
+			key_position++;
+			j = -1;
+		}
+		j++;
+	}
+}
