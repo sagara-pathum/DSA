@@ -97,6 +97,7 @@ void Grid::gexec(){
 		if (is_win()) {
 
 			print_over();
+			print_res_and_qui();
 			screen_border();
 			add_vec();
 			refresh();
@@ -141,6 +142,19 @@ void Grid::print_over(){
 
 }
 
+void Grid::print_res_and_qui(){
+	int foot_y = max_y - 3;
+	int foot_x1 = 3;
+	int foot_x2 = max_x - 21;
+
+	char s1[] = "Press 'r' to restart !";
+	char s2[] = "Press 'q' to quit.";
+
+	move(foot_y, foot_x1);
+	printw("%s ", s1);
+	move(foot_y, foot_x2);
+	printw("%s ", s2);
+}
 
 void Grid::screen_border(){
 	int x_left = 1;

@@ -33,6 +33,7 @@ class Grid : public Pzl
 
 		void print_over();
 
+		void print_res_and_qui();
 
 };
 
