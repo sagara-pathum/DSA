@@ -28,7 +28,6 @@ Pzl::Pzl(){
                 { tile_num[6], tile_num[7], tile_num[8] }
 	};
 
-	puzzle_suffle(50);
 }
 
 std::vector< std::vector<int> > Pzl::get_vec(){

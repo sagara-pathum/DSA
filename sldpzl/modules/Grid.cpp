@@ -81,6 +81,8 @@ void Grid::print_grid(){
 
 void Grid::gexec(){
     int ch;
+
+	puzzle_suffle(50);
 	screen_border();
 	print_grid();
 	add_vec();
@@ -98,10 +100,20 @@ void Grid::gexec(){
 			screen_border();
 			add_vec();
 			refresh();
-			end_hold(); /// see here there is a bug
+			while((ch=getch()) != 'q'){	
+				if (ch == 'r') {
+					clear();
+					gexec();
+					break;
+				}
+			}
+			break; /// see here there is a bug
 		}
 			
-	}	
+	}
+
+	
+
 }
 
 bool Grid::is_win(){
@@ -122,12 +134,13 @@ bool Grid::is_win(){
 
 void Grid::print_over(){
 	move(3,3);
-	/*std::string*/char s[] = " _______  _______  __   __  _______    _______  __   __  _______  ______    \n   |       ||   _   ||  |_|  ||       |  |       ||  | |  ||       ||    _ |  \n   |    ___||  |_|  ||       ||    ___|  |   _   ||  |_|  ||    ___||   | ||  \n   |   | __ |       ||       ||   |___   |  | |  ||       ||   |___ |   |_||_ \n   |   ||  ||       ||       ||    ___|  |  |_|  ||       ||    ___||    __  |\n   |   |_| ||   _   || ||_|| ||   |___   |       | |     | |   |___ |   |  | |\n   |_______||__| |__||_|   |_||_______|  |_______|  |___|  |_______||___|  |_|\n";
+	char s[] = " _______  _______  __   __  _______    _______  __   __  _______  ______    \n   |       ||   _   ||  |_|  ||       |  |       ||  | |  ||       ||    _ |  \n   |    ___||  |_|  ||       ||    ___|  |   _   ||  |_|  ||    ___||   | ||  \n   |   | __ |       ||       ||   |___   |  | |  ||       ||   |___ |   |_||_ \n   |   ||  ||       ||       ||    ___|  |  |_|  ||       ||    ___||    __  |\n   |   |_| ||   _   || ||_|| ||   |___   |       | |     | |   |___ |   |  | |\n   |_______||__| |__||_|   |_||_______|  |_______|  |___|  |_______||___|  |_|\n";
 
 	printw("%s", s);
 	refresh();
 
 }
+
 
 void Grid::screen_border(){
 	int x_left = 1;
@@ -150,9 +163,3 @@ void Grid::screen_border(){
 
 }
 
-
-void end_hold(){
-	while(true)	{
-		refresh();
-	}
-}
