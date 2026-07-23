@@ -4,11 +4,14 @@
 
 int main(){
 
-	Pzl p = Pzl();
-	p.loading();
+	Menu m = Menu();
+	m.loading();
 	clear();
-	Grid g = Grid(12);
-	g.gexec();
+	int choice = m.run();
+	if (choice == 1) {
+		Grid g = Grid(12);
+		g.gexec();
+	}
 	endwin();
 	return 0;
 }

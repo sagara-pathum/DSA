@@ -3,24 +3,7 @@
 #include <random> // for namdom_device and mt19937
 #include <algorithm> // shuffle
 
-Pzl::Pzl(){
-
-	initscr();
-
-	getmaxyx(stdscr, max_y, max_x);
-
-	// bug happens here. because terminal application usually runs in 'coocked' mode. which precisely 'line buffered mode'
-	// when we press a button its characters is saved in the buffer until it meet a newline character
-	// we need to remove the buffering and give the input character control to the application
-	// we can do that using cbreak();
-	// we when character is given, terminal tries to print the input to curser.
-	// it may also causes bugs.
-	// so it is better to use noecho() to stop that.
-	// usually noecho is used followed by cbreak.
-	cbreak();
-	noecho();
-
-	keypad(stdscr, TRUE);
+Pzl::Pzl() : Menu() {
 
 	v = {
                 { tile_num[0], tile_num[1], tile_num[2] },
@@ -334,23 +317,3 @@ void Pzl::puzzle_suffle(int n_size){
 	clr_move_err();
 }
 
-
-void Pzl::loading(){
-	long j = 0;
-	int key_position = 10;
-
-	move(2,2);
-	printw("Loading ");
-	refresh();
-
-	for (long i = 0; i <= 2400000000 ; i++) {
-		if (j == 400000000) {
-			move(2,key_position);
-			printw("#");
-			refresh();
-			key_position++;
-			j = -1;
-		}
-		j++;
-	}
-}

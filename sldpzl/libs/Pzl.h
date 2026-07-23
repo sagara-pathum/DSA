@@ -3,9 +3,10 @@
 
 #include <iostream>
 #include <vector>
-#include <ncurses.h> // define this here so that it wont be trouble in the main
+#include <ncurses.h>
+#include "../libs/menu.h"
 
-class Pzl
+class Pzl : public Menu
 {
 	protected:
 		std::vector<int> tile_num = {0,1,2,3,4,5,6,7,8};
@@ -16,7 +17,6 @@ class Pzl
 		};
 
 		int temp_for_swap;
-		int max_y, max_x; //for screen dimensions
 
 	public:
 
@@ -41,8 +41,6 @@ class Pzl
 		void move_tile(int key); // this is the function that moves the numbers
 
 		void puzzle_suffle(int n_size); // shuffle_vec is random. it is not good for sldpzl. sometimes it makes the puzzle unsolvable. i write a function again
-
-		void loading();
 
 };
 
